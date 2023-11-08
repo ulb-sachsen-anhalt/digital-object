@@ -1,0 +1,10 @@
+[FORMAT]
+# Maximum line length for your code (set it to your preferred value)
+max-line-length = 120
+
+[MESSAGES CONTROL]
+# R0903: too-few-public-methods
+# R0902: too-many-instance-attributes
+# R0913: too-many-arguments
+# C0116: missing-function-docstring
+disable=R0903,R0902,R0913,C0116
