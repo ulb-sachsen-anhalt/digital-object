@@ -16,10 +16,11 @@ packages = [
 ]
 repository = 'https://github.com/ulb-sachsen-anhalt/digitized-object'
 homepage = 'https://github.com/ulb-sachsen-anhalt/digitized-object'
-keywords = ["digitization", "digitized object", "digitized content", "digitized assets", "ocr format"]
+keywords = ["digitization", "digital object", "digitized content", "ocr"]
 classifiers = [
-    "Digitization",
-    "OCR",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
 ]
 
 [tool.poetry.dependencies]
