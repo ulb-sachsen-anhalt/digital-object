@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "digital-object"
-version = "0.1.0"
+version = "0.2.0"
 description = "digital object assets"
 authors = [
     "Universitäts- und Landesbibliothek Sachsen-Anhalt <development@bibliothek.uni-halle.de>"
