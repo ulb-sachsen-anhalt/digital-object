@@ -12,10 +12,14 @@ class FormatPageUtil:
     """helper methods for parsing Page XML files"""
 
     @staticmethod
-    def extract_data(path: str, ns='') -> DigitalObjectTree:
+    def extract_data(path: str) -> DigitalObjectTree:
         document: Document = parse(path)
         doc_root: Element = document.documentElement
-        page_one = doc_root.getElementsByTagName(ns + 'Page')[0]
+        ns = doc_root.namespaceURI
+        pages = doc_root.getElementsByTagNameNS(ns, 'Page')
+        if len(pages) != 1:
+            raise DigitalObjectException(f"No unique page for {path}")
+        page_one = pages[0]
         page_width = int(page_one.getAttribute('imageWidth'))
         page_height = int(page_one.getAttribute('imageHeight'))
         top_piece = DigitalObjectTree(
@@ -28,8 +32,8 @@ class FormatPageUtil:
         top_piece.level = DigitalObjectLevel.PAGE
         top_piece.dimensions = [[0, 0], [page_width, 0],
                                 [page_width, page_height], [0, page_height]]
-        regions = doc_root.getElementsByTagName(ns + 'TextRegion')
-        regions.extend(doc_root.getElementsByTagName(ns + 'TableCell'))
+        regions = doc_root.getElementsByTagNameNS(ns, 'TextRegion')
+        regions.extend(doc_root.getElementsByTagNameNS(ns, 'TableCell'))
         # no regions are considered to be reasonable
         # don't raise exception, it's an empty page
         if len(regions) < 1:
@@ -40,7 +44,7 @@ class FormatPageUtil:
         for region in regions:
             _piece = FormatPageUtil.__from_text_element(region, top_piece, ns)
             # go into details
-            page_lines = region.getElementsByTagName(ns + 'TextLine')
+            page_lines = region.getElementsByTagNameNS(ns, 'TextLine')
             if len(page_lines) > 0:
                 _piece.children = FormatPageUtil.__read_lines(page_lines, _piece, ns)
             _piece.parent = top_piece
@@ -51,11 +55,11 @@ class FormatPageUtil:
         return top_piece
 
     @staticmethod
-    def __read_lines(page_lines, parent, ns) -> List[DigitalObjectTree]:
+    def __read_lines(page_lines: List[Element], parent, ns) -> List[DigitalObjectTree]:
         line_pieces = []
         for page_line in page_lines:
             line_piece = FormatPageUtil.__from_text_element(page_line, parent, ns)
-            word_tokens = page_line.getElementsByTagName(ns + 'Word')
+            word_tokens = page_line.getElementsByTagNameNS(ns, 'Word')
             line_piece.parent = parent
             # inspect PAGE on word level, if set
             if len(word_tokens) > 0:
@@ -73,7 +77,7 @@ class FormatPageUtil:
         return line_pieces
 
     @staticmethod
-    def __from_text_element(element, parent, ns) -> DigitalObjectTree:
+    def __from_text_element(element:Element, parent, ns) -> DigitalObjectTree:
         """transformation from PAGE XML textual nodes
         to generic pieces with specific transkription.
 
@@ -120,7 +124,11 @@ class FormatPageUtil:
         # replace current text with next order children text
         _txt_eqs = [n for n in element.childNodes if n.localName == 'TextEquiv']
         if _txt_eqs:
-            _first_unicode = _txt_eqs[0].getElementsByTagName(ns + 'Unicode')[0]
+            _first_text: Element = _txt_eqs[0]
+            _unicodes = _first_text.getElementsByTagNameNS(ns, 'Unicode')
+            if len(_unicodes) < 1:
+                raise DigitalObjectException(f"{_local}@ID={_id} text missing unicode")
+            _first_unicode = _unicodes[0]
             if _first_unicode.firstChild:
                 # replace linebreak if text only at region level
                 _content = _first_unicode.firstChild.nodeValue.replace('\n', ' ')

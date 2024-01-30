@@ -3,15 +3,27 @@ of digital assets in OCR ALTO format
 """
 
 import os
-from pathlib import PurePath
+from pathlib import (
+	PurePath,
+)
 
 import pytest
-from shapely import Polygon
+from shapely import (
+	Polygon,
+)
 
-from digital_object.digital_object_model import DigitalObjectTree
-from digital_object.common import DigitalObjectLevel
-from digital_object.main import to_digital_object
-from tests.conftest import TEST_RES_DIR
+from digital_object.digital_object_model import (
+	DigitalObjectTree,
+)
+from digital_object.common import (
+	DigitalObjectLevel,
+)
+from digital_object.main import (
+	to_digital_object,
+)
+from tests.conftest import (
+	TEST_RES_DIR,
+)
 
 
 @pytest.fixture(name="zd101")

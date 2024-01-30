@@ -11,9 +11,11 @@ from shapely.geometry import Point
 from digital_object import (
     DigitalObjectTree,
     DigitalObjectLevel,
-    DigitalObjectUtil,
     DigitalObjectChanges,
     to_digital_object,
+)
+from digital_object.digital_object_util import (
+    DigitalObjectUtil,
 )
 
 

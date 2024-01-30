@@ -54,7 +54,7 @@ class DigitalObjectUtil:
         elif name_space == PAGE_2013:
             piece = FormatPageUtil.extract_data(path_in)
         elif doc_root.localName == 'PcGts':
-            piece = FormatPageUtil.extract_data(path_in, ns='pc:')
+            piece = FormatPageUtil.extract_data(path_in)
         else:
             raise RuntimeError(f'Unknown Data-Format "{doc_root.localName}" in "{path_in}"')
         return piece

@@ -1,7 +1,8 @@
 """Test specification for common aspects of OCR assets"""
 
-
-from digital_object.common import DigitalObjectLevel
+from digital_object.common import (
+	DigitalObjectLevel,
+)
 
 
 def test_digital_object_hierarchy_bottom_up():
